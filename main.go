@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/robfig/cron/v3"
+	"time"
 )
 
 var (
@@ -13,7 +15,12 @@ func main() {
 	defer crontab.Stop()
 
 	// 1分钟获取一次当前价格
-	_, errCron := crontab.AddFunc("*/1 * * * *", saveContractPrice)
+	_, errCron := crontab.AddFunc("*/1 * * * *", func() {
+		fmt.Println("start saveContractPrice cron.", time.Now())
+		//每1分钟执行一次获取当前的价格
+		saveContractPrice()
+
+	})
 	if errCron != nil {
 		panic(errCron)
 	}
