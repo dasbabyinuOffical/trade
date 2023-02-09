@@ -84,6 +84,7 @@ func getModelByClass(class Class, symbol string, percent float64, time int64) in
 }
 
 func analysisPricePercent(seconds int64, class Class) {
+	fmt.Println("analysis price,class:", class, "seconds:", seconds, time.Now())
 	// 获取所有symbol分类
 	var symbols []string
 	err := db.Model(new(ContractPrice)).
