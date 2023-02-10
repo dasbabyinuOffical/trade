@@ -67,6 +67,12 @@ func getModelByClass(class Class, symbol string, percent float64, time int64) in
 			PricePercent: percent,
 			Time:         time,
 		}
+	case FourHour:
+		return &ContractPrice4Hour{
+			Symbol:       symbol,
+			PricePercent: percent,
+			Time:         time,
+		}
 	case TwelveHour:
 		return &ContractPrice12Hour{
 			Symbol:       symbol,
