@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis"
 	"gorm.io/gorm"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -26,11 +27,19 @@ func sendMessageTo1hQueue() {
 	// 发送到redis队列
 	for _, v := range cp1h {
 		// 策略在-3% -- 3%之间忽略
-		if v.PricePercent < 3 && v.PricePercent > -3 {
+		var template string
+		if v.PricePercent < 3 || v.PricePercent > -3 {
 			continue
 		}
+		if v.PricePercent > 3 {
+			template = templateUp
+		}
+		if v.PricePercent < -3 {
+			template = templateDown
+		}
 		ts := time.Unix(v.Time, 0).Format("2006-01-02 15:04")
-		_, errPush := rdb.LPush(QueueContract1h, fmt.Sprintf("%s:%+f:%s", v.Symbol, v.PricePercent, ts)).Result()
+		template = fmt.Sprintf(template, v.Symbol, v.PricePercent, v.PriceBefore, v.PriceNow, ts)
+		_, errPush := rdb.LPush(QueueContract1h, template).Result()
 		if errPush != nil {
 			fmt.Println("sendMessageTo1hQueue failed:", errPush.Error())
 		}
@@ -66,12 +75,11 @@ func sendQueueMessageToBot() {
 		time.Sleep(time.Second)
 
 		// 发送数据到bot
-		for _, v := range value {
-			_, errSend := sendMessageToTelegram(v)
-			if errSend != nil {
-				fmt.Println("sendMessageTo1hQueue failed:", errSend.Error())
-			}
-			time.Sleep(time.Second)
+		message := strings.Join(value[1:], ",")
+		_, errSend := sendMessageToTelegram(message)
+		if errSend != nil {
+			fmt.Println("sendMessageTo1hQueue failed:", errSend.Error())
 		}
+		time.Sleep(time.Second)
 	}
 }

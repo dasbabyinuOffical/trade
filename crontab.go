@@ -47,42 +47,55 @@ func saveContractPrice() {
 	}
 }
 
-func getModelByClass(class Class, symbol string, percent float64, time int64) interface{} {
+func getModelByClass(class Class, symbol string, time int64, priceBefore float64, priceNow float64) interface{} {
+	percent := (priceNow - priceBefore) * 100 / priceBefore
 	switch class {
 	case FiveMinutes:
 		return &ContractPrice5Min{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	case FifteenMinutes:
 		return &ContractPrice15Min{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	case OneHour:
 		return &ContractPrice1Hour{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	case FourHour:
 		return &ContractPrice4Hour{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	case TwelveHour:
 		return &ContractPrice12Hour{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	case OneDay:
 		return &ContractPrice1Day{
 			Symbol:       symbol,
+			PriceBefore:  priceBefore,
 			PricePercent: percent,
+			PriceNow:     priceNow,
 			Time:         time,
 		}
 	}
@@ -131,8 +144,7 @@ func analysisPricePercent(seconds int64, class Class) {
 		}
 
 		// 获取价格变化范围
-		percent := (cp2.Price - cp1.Price) * 100 / cp1.Price
-		m := getModelByClass(class, symbol, percent, seconds)
+		m := getModelByClass(class, symbol, seconds, cp1.Price, cp2.Price)
 		errPercent := db.Create(m).Error
 		if errPercent != nil {
 			fmt.Println("create percent err:", errPercent)

@@ -18,7 +18,9 @@ func (p *ContractPrice) TableName() string {
 type ContractPrice1Day struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
@@ -29,7 +31,9 @@ func (p *ContractPrice1Day) TableName() string {
 type ContractPrice1Hour struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
@@ -40,7 +44,9 @@ func (p *ContractPrice1Hour) TableName() string {
 type ContractPrice4Hour struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
@@ -51,7 +57,9 @@ func (p *ContractPrice4Hour) TableName() string {
 type ContractPrice12Hour struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
@@ -62,7 +70,9 @@ func (p *ContractPrice12Hour) TableName() string {
 type ContractPrice5Min struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
@@ -73,7 +83,9 @@ func (p *ContractPrice5Min) TableName() string {
 type ContractPrice15Min struct {
 	gorm.Model
 	Symbol       string  `gorm:"symbol" json:"symbol"`
+	PriceBefore  float64 `gorm:"price_before" json:"priceBefore"`
 	PricePercent float64 `gorm:"price_percent" json:"pricePercent"`
+	PriceNow     float64 `gorm:"price_now" json:"priceNow"`
 	Time         int64   `gorm:"time"  json:"time"`
 }
 
