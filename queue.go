@@ -39,7 +39,7 @@ func sendMessageTo1hQueue() {
 	// 设置所有数据为已读
 	err = db.Model(&ContractPrice1Hour{}).
 		Where("id <= ?", cp1h[len(cp1h)-1].ID).
-		Update("is_sync = ?", 1).Error
+		UpdateColumn("is_sync", 1).Error
 	if err != nil {
 		fmt.Println("sendMessageTo1hQueue update database err:", err.Error())
 	}
