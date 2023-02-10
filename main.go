@@ -41,11 +41,25 @@ func startMessage() {
 }
 
 func main() {
-	// 启动定时任务
-	go startJob()
+	// init db
+	fmt.Println("init db.")
+	initDB()
+	fmt.Println("init db done.")
 
-	// 启动消息发送
+	// init redis
+	fmt.Println("init redis.")
+	initRedis()
+	fmt.Println("init redis done.")
+
+	// start job
+	fmt.Println("start job.")
+	go startJob()
+	fmt.Println("start job done.")
+
+	// start message
+	fmt.Println("start message.")
 	go startMessage()
+	fmt.Println("start message done.")
 
 	select {}
 }
