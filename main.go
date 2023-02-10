@@ -11,9 +11,6 @@ var (
 )
 
 func startJob() {
-	crontab = cron.New()
-	defer crontab.Stop()
-
 	// 1分钟获取一次当前价格
 	_, errCron := crontab.AddFunc("*/1 * * * *", func() {
 		fmt.Println("start saveContractPrice cron.", time.Now())
@@ -53,7 +50,9 @@ func main() {
 
 	// start job
 	fmt.Println("start job.")
-	go startJob()
+	crontab = cron.New()
+	defer crontab.Stop()
+	startJob()
 	fmt.Println("start job done.")
 
 	// start message
