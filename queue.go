@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-redis/redis"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -42,4 +44,34 @@ func sendMessageTo1hQueue() {
 		fmt.Println("sendMessageTo1hQueue update database err:", err.Error())
 	}
 	return
+}
+
+func sendQueueMessageToBot() {
+	// 发送1小时机器人队列消息到bot中
+	for {
+		// 设置一个5秒的超时时间
+		value, err := rdb.BRPop(5*time.Second, QueueContract1h).Result()
+		if err == redis.Nil {
+			// 查询不到数据
+			time.Sleep(1 * time.Second)
+			continue
+		}
+		if err != nil {
+			// 查询出错
+			fmt.Println("sendMessageTo1hQueue failed:", err.Error())
+			time.Sleep(1 * time.Second)
+			continue
+		}
+		log.Println("消费到数据：", value, "当前时间是：", time.Now())
+		time.Sleep(time.Second)
+
+		// 发送数据到bot
+		for _, v := range value {
+			_, errSend := sendMessageToTelegram(v)
+			if errSend != nil {
+				fmt.Println("sendMessageTo1hQueue failed:", errSend.Error())
+			}
+			time.Sleep(time.Second)
+		}
+	}
 }

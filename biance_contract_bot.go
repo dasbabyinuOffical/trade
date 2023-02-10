@@ -10,7 +10,7 @@ const (
 	URL = "https://api.telegram.org/bot5854505388:AAEnQbGKzjh_19gMr-B7aW-beDT3ZaYnplY/sendMessage?chat_id=-1001666206862&text=%s"
 )
 
-func sendMessage(message string) (res string, err error) {
+func sendMessageToTelegram(message string) (res string, err error) {
 	url := fmt.Sprintf(URL, message)
 	resp, err := http.Get(url)
 	if err != nil {

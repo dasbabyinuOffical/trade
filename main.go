@@ -10,7 +10,7 @@ var (
 	crontab *cron.Cron
 )
 
-func main() {
+func startJob() {
 	crontab = cron.New()
 	defer crontab.Stop()
 
@@ -27,7 +27,6 @@ func main() {
 		fmt.Println("start  sendMessageTo1hQueue.", time.Now())
 		// 每分钟发送数据到消息队列
 		sendMessageTo1hQueue()
-
 	})
 	if errCron != nil {
 		panic(errCron)
@@ -35,6 +34,18 @@ func main() {
 
 	// 启动定时任务
 	crontab.Start()
+}
+
+func startMessage() {
+	sendQueueMessageToBot()
+}
+
+func main() {
+	// 启动定时任务
+	go startJob()
+
+	// 启动消息发送
+	go startMessage()
 
 	select {}
 }
