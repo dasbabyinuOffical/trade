@@ -23,6 +23,10 @@ func sendMessageTo1hQueue() {
 
 	// 发送到redis队列
 	for _, v := range cp1h {
+		// 策略在-3% -- 3%之间忽略
+		if v.PricePercent < 3 && v.PricePercent > -3 {
+			continue
+		}
 		ts := time.Unix(v.Time, 0).Format("2006-01-02 15:04")
 		_, errPush := rdb.LPush(QueueContract1h, fmt.Sprintf("%s:%+f:%s", v.Symbol, v.PricePercent, ts)).Result()
 		if errPush != nil {
