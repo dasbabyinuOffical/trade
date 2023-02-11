@@ -18,6 +18,7 @@ func sendMessageTo1hQueue() {
 	var cp1h []*ContractPrice1Hour
 	err = db.Where("is_sync = ?", 0).Find(&cp1h).Error
 	if err == gorm.ErrRecordNotFound || len(cp1h) == 0 {
+		fmt.Println("当前1h无新数据", time.Now())
 		return
 	}
 	if err != nil {
@@ -28,7 +29,7 @@ func sendMessageTo1hQueue() {
 	for _, v := range cp1h {
 		// 策略在-3% -- 3%之间忽略
 		var template string
-		if v.PricePercent < 3 || v.PricePercent > -3 {
+		if v.PricePercent > -3 && v.PricePercent < 3 {
 			continue
 		}
 		if v.PricePercent > 3 {
