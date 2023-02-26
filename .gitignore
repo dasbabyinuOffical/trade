@@ -1,1 +1,4 @@
 .idea/
+docker/mysql/data/
+docker/clickhouse/data/
+docker/clickhouse/logs/

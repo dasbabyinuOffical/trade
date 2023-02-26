@@ -1,0 +1,51 @@
+version: '3.7'
+services:
+  mysql-db:
+    restart: always
+    container_name: mysql-01 
+    image: mysql:8.0             
+    ports:
+      - "3306:3306"              
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_HOST: ${MYSQL_ROOT_HOST}
+    volumes:
+      - "${MYSQL_DIR}/data:/var/lib/mysql" 
+      - "${MYSQL_DIR}/config:/etc/mysql/conf.d"      
+  redis:
+    image: redis:6.2.6
+    container_name: my-redis
+    restart: always
+    volumes:
+      - .redis/redis.conf:/etc/redis/redis.conf:ro
+      - .redis/data:/data
+      - .redis/logs:/logs
+    command: redis-server /etc/redis/redis.conf
+    ports:
+      - 6379:6379
+
+  grafana:  
+    image: grafana/grafana
+    container_name: 'grafana'
+    ports:  
+    - '3000:3000'
+    volumes: 
+    - ./grafana/config/grafana.ini:/etc/grafana/grafana.ini 
+    - ./grafana/provisioning/:/etc/grafana/provisioning/ 
+    - /etc/localtime:/etc/localtime:ro
+    env_file:
+    - ./grafana/config.monitoring
+
+  clickhouse:
+    container_name: clickhouse
+    image: yandex/clickhouse-server:latest
+    restart: always
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+      - "9009:9009"
+    volumes: 
+      - ./clickhouse/config.xml:/etc/clickhouse-server/config.d/config.xml:rw
+      - ./clickhouse/users.xml:/etc/clickhouse-server/users.xml:rw
+      - ./clickhouse/logs:/var/log/clickhouse-server
+      - ./clickhouse/data:/var/lib/clickhouse:rw
